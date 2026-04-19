@@ -18,7 +18,7 @@
     <p class="start-level-preview">APRENDE A PROGRAMAR · 10 NIVELES</p>
     <p class="start-desc">
       Guía a tu Fremen <b>escribiendo código</b>.
-      Aprende <b>comandos</b>, <b>bucles</b> y <b>sensores</b>
+      Aprende <b>comandos</b>, <b>bucles</b>, <b>condicionales</b> y <b>sensores</b>
       para recolectar la especia y sobrevivir a Shai-Hulud.
     </p>
     <button class="start-btn" onclick="startGame()"><span class="sb-icon">💻</span><span>COMENZAR</span></button>
@@ -52,9 +52,9 @@
         </div>
       </div>
       <div id="ov-grace" class="ov"><div class="grace-num" id="grace-num">3</div></div>
-      <div id="ov-death" class="ov"><div class="ov-box"><div class="ov-big">💀</div><div class="ov-title red">SHAI-HULUD TE DEVORÓ</div><p class="ov-sub">Detecta el peligro y escapa al lado contrario</p><button class="ov-btn" onclick="resetLevel()">REINTENTAR</button></div></div>
-      <div id="ov-fail" class="ov"><div class="ov-box"><div class="ov-big">⚠</div><div class="ov-title orange">ESPECIA INCOMPLETA</div><p class="ov-sub" id="fail-msg"></p><button class="ov-btn" onclick="resetLevel()">MODIFICAR CÓDIGO</button></div></div>
-      <div id="ov-win" class="ov"><div class="ov-box"><div class="ov-big gold">◆</div><div class="ov-title gold" id="win-t">¡COMPLETADO!</div><p class="ov-sub" id="win-m"></p><div class="win-stars" id="win-stars"></div><p class="ov-sub" id="win-concept"></p><div class="ov-row"><button class="ov-btn" onclick="nextLevel()">SIGUIENTE →</button><button class="ov-btn ghost" onclick="resetLevel()">MEJORAR ★</button></div></div></div>
+      <div id="ov-death" class="ov"><div class="ov-box"><div class="ov-big">💀</div><div class="ov-title red">SHAI-HULUD TE DEVORÓ</div><p class="ov-sub">Usa sensores direccionales para detectarlo</p><button class="ov-btn" onclick="resetLevel()">REINTENTAR</button></div></div>
+      <div id="ov-fail" class="ov"><div class="ov-box"><div class="ov-big">⚠</div><div class="ov-title orange">ESPECIA INCOMPLETA</div><p class="ov-sub" id="fail-msg">Tu programa terminó pero no recogiste toda la especia.</p><button class="ov-btn" onclick="resetLevel()">REINTENTAR</button></div></div>
+      <div id="ov-win" class="ov"><div class="ov-box"><div class="ov-big gold">◆</div><div class="ov-title gold" id="win-t">¡NIVEL COMPLETADO!</div><p class="ov-sub" id="win-m"></p><div class="win-stars" id="win-stars"></div><p class="ov-sub" id="win-concept"></p><div class="ov-row"><button class="ov-btn" onclick="nextLevel()">SIGUIENTE →</button><button class="ov-btn ghost" onclick="resetLevel()">MEJORAR ★</button></div></div></div>
       <div id="ov-end" class="ov"><div class="ov-box"><div class="ov-big gold xl">◆</div><div class="ov-title gold">¡MAESTRO FREMEN!</div><p class="ov-sub">Dominas los fundamentos de programación</p><div class="final-score"><span>PUNTAJE TOTAL</span><b id="final-score">0</b></div><button class="ov-btn" onclick="backToMenu()">MENÚ</button></div></div>
       <div id="ov-lvl" class="ov"><div class="ov-box"><div class="ov-title gold" id="ann-lvl">NIVEL 1</div><div class="ov-sub blue" id="ann-name"></div></div></div>
     </div>
@@ -63,7 +63,7 @@
       <div class="tutorial" id="tutorial">
         <div class="tut-header">
           <span class="tut-badge" id="tut-badge">NIVEL 1</span>
-          <span class="tut-concept" id="tut-concept"></span>
+          <span class="tut-concept" id="tut-concept">Comandos Básicos</span>
         </div>
         <div class="tut-body" id="tut-body"></div>
       </div>
@@ -71,30 +71,23 @@
       <div class="blocks" id="blocks-area">
         <div class="bk-row" id="bk-move">
           <span class="bk-label">MOV</span>
-          <button class="bk m" onclick="ins('arriba(1)')">↑ arriba</button>
-          <button class="bk m" onclick="ins('abajo(1)')">↓ abajo</button>
-          <button class="bk m" onclick="ins('izquierda(1)')">← izq</button>
-          <button class="bk m" onclick="ins('derecha(1)')">→ der</button>
+          <button class="bk m" onclick="ins('arriba(1)')">↑</button>
+          <button class="bk m" onclick="ins('abajo(1)')">↓</button>
+          <button class="bk m" onclick="ins('izquierda(1)')">←</button>
+          <button class="bk m" onclick="ins('derecha(1)')">→</button>
           <button class="bk w" onclick="ins('esperar(1)')">⏸</button>
         </div>
-        <div class="bk-row" id="bk-loop" style="display:none">
-          <span class="bk-label">🔁</span>
-          <button class="bk lp" onclick="ins('repetir(3):\n  \nfin')">repetir(n)</button>
-        </div>
-        <div class="bk-row" id="bk-danger" style="display:none">
-          <span class="bk-label">☠</span>
-          <button class="bk dng" onclick="ins('si_peligro_derecha(5):\n  izquierda(2)\nfin')">peligro →</button>
-          <button class="bk dng" onclick="ins('si_peligro_izquierda(5):\n  derecha(2)\nfin')">peligro ←</button>
-          <button class="bk dng" onclick="ins('si_peligro_arriba(5):\n  abajo(2)\nfin')">peligro ↑</button>
-          <button class="bk dng" onclick="ins('si_peligro_abajo(5):\n  arriba(2)\nfin')">peligro ↓</button>
-        </div>
-        <div class="bk-row" id="bk-sense" style="display:none">
-          <span class="bk-label">👁</span>
-          <button class="bk sns" onclick="ins('si_especia(derecha,8):\n  derecha(2)\nfin')">◆ especia</button>
-          <button class="bk sns" onclick="ins('si_refugio(derecha,4):\n  derecha(2)\nfin')">⛰ refugio</button>
-          <button class="bk sns" onclick="ins('si_bloqueado(derecha):\n  abajo(1)\nfin')">▧ bloqueado</button>
-          <button class="bk sns" onclick="ins('esconderse()')">🛡 esconder</button>
+        <div class="bk-row" id="bk-logic" style="display:none">
+          <span class="bk-label">SI</span>
+          <button class="bk c" onclick="ins('si_gusano(derecha,5):\n  \nfin')">☠ gusano(dir)</button>
+          <button class="bk c" onclick="ins('si_especia(derecha,8):\n  \nfin')">◆ especia(dir)</button>
+          <button class="bk c" onclick="ins('si_duna(derecha,3):\n  \nfin')">⛰ duna(dir)</button>
+          <button class="bk c" onclick="ins('si_borde(derecha,2):\n  \nfin')">▧ borde(dir)</button>
           <button class="bk e" onclick="ins('sino:\n  ')">↪ sino</button>
+        </div>
+        <div class="bk-row" id="bk-loop" style="display:none">
+          <span class="bk-label">+</span>
+          <button class="bk lp" onclick="ins('repetir(3):\n  \nfin')">🔁 repetir</button>
         </div>
       </div>
 
@@ -115,6 +108,7 @@
         <button class="ea hint" onclick="showHint()">💡</button>
       </div>
 
+      <!-- Hint popup -->
       <div id="hint-box" class="hint-box">
         <div class="hint-header"><span>💡 Pista</span><button onclick="closeHint()">✕</button></div>
         <div class="hint-body" id="hint-text"></div>
