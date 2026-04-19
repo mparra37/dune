@@ -19,25 +19,40 @@
     <p class="start-desc">
       Guía a tu Fremen <b>escribiendo código</b>.
       Aprende <b>comandos</b>, <b>bucles</b> y <b>sensores</b>
-      para recolectar especia y sobrevivir a Shai-Hulud.
+      para recolectar la especia y sobrevivir a Shai-Hulud.
     </p>
     <button class="start-btn" onclick="startGame()"><span class="sb-icon">💻</span><span>COMENZAR</span></button>
-    <button class="start-btn small" onclick="selectLevel()">ELEGIR NIVEL</button>
+    <!-- <button class="start-btn small" onclick="selectLevel()">ELEGIR NIVEL</button> -->
   </div>
 </div>
 
-<div id="level-select" class="ov"><div class="ov-box ls-box"><div class="ov-title gold">ELIGE TU NIVEL</div><div class="ls-grid" id="ls-grid"></div><button class="ov-btn ghost" onclick="closeLevelSelect()">VOLVER</button></div></div>
+<div id="level-select" class="ov">
+  <div class="ov-box ls-box">
+    <div class="ov-title gold">ELIGE TU NIVEL</div>
+    <div class="ls-grid" id="ls-grid"></div>
+    <button class="ov-btn ghost" onclick="closeLevelSelect()">VOLVER</button>
+  </div>
+</div>
 
 <div id="game" class="game">
   <div id="game-main">
     <div id="canvas-wrap">
       <canvas id="c"></canvas>
       <div class="hud">
-        <div class="hud-left"><span class="hud-lvl" id="hud-lvl">N1</span><span class="hud-spice" id="hud-spice">◆ 0/1</span><span class="hud-score" id="hud-score">★ 0</span></div>
-        <div class="hud-right"><span class="hud-tag" id="hud-hidden" style="display:none">⛰</span><span class="hud-steps" id="hud-steps">↦ 0</span><button class="hud-btn" onclick="toggleMusic()" id="music-btn">♪</button><button class="hud-btn" onclick="backToMenu()">☰</button></div>
+        <div class="hud-left">
+          <span class="hud-lvl" id="hud-lvl">N1</span>
+          <span class="hud-spice" id="hud-spice">◆ 0/1</span>
+          <span class="hud-score" id="hud-score">★ 0</span>
+        </div>
+        <div class="hud-right">
+          <span class="hud-tag" id="hud-hidden" style="display:none">⛰</span>
+          <span class="hud-steps" id="hud-steps">↦ 0</span>
+          <button class="hud-btn" onclick="toggleMusic()" id="music-btn">♪</button>
+          <button class="hud-btn" onclick="backToMenu()">☰</button>
+        </div>
       </div>
       <div id="ov-grace" class="ov"><div class="grace-num" id="grace-num">3</div></div>
-      <div id="ov-death" class="ov"><div class="ov-box"><div class="ov-big">💀</div><div class="ov-title red">SHAI-HULUD TE DEVORÓ</div><p class="ov-sub">Detecta el peligro y usa <code>huir()</code></p><button class="ov-btn" onclick="resetLevel()">REINTENTAR</button></div></div>
+      <div id="ov-death" class="ov"><div class="ov-box"><div class="ov-big">💀</div><div class="ov-title red">SHAI-HULUD TE DEVORÓ</div><p class="ov-sub">Detecta el peligro y escapa al lado contrario</p><button class="ov-btn" onclick="resetLevel()">REINTENTAR</button></div></div>
       <div id="ov-fail" class="ov"><div class="ov-box"><div class="ov-big">⚠</div><div class="ov-title orange">ESPECIA INCOMPLETA</div><p class="ov-sub" id="fail-msg"></p><button class="ov-btn" onclick="resetLevel()">MODIFICAR CÓDIGO</button></div></div>
       <div id="ov-win" class="ov"><div class="ov-box"><div class="ov-big gold">◆</div><div class="ov-title gold" id="win-t">¡COMPLETADO!</div><p class="ov-sub" id="win-m"></p><div class="win-stars" id="win-stars"></div><p class="ov-sub" id="win-concept"></p><div class="ov-row"><button class="ov-btn" onclick="nextLevel()">SIGUIENTE →</button><button class="ov-btn ghost" onclick="resetLevel()">MEJORAR ★</button></div></div></div>
       <div id="ov-end" class="ov"><div class="ov-box"><div class="ov-big gold xl">◆</div><div class="ov-title gold">¡MAESTRO FREMEN!</div><p class="ov-sub">Dominas los fundamentos de programación</p><div class="final-score"><span>PUNTAJE TOTAL</span><b id="final-score">0</b></div><button class="ov-btn" onclick="backToMenu()">MENÚ</button></div></div>
@@ -45,12 +60,15 @@
     </div>
 
     <div id="editor-panel">
-      <div class="tutorial">
-        <div class="tut-header"><span class="tut-badge" id="tut-badge">NIVEL 1</span><span class="tut-concept" id="tut-concept"></span></div>
+      <div class="tutorial" id="tutorial">
+        <div class="tut-header">
+          <span class="tut-badge" id="tut-badge">NIVEL 1</span>
+          <span class="tut-concept" id="tut-concept"></span>
+        </div>
         <div class="tut-body" id="tut-body"></div>
       </div>
 
-      <div class="blocks">
+      <div class="blocks" id="blocks-area">
         <div class="bk-row" id="bk-move">
           <span class="bk-label">MOV</span>
           <button class="bk m" onclick="ins('arriba(1)')">↑ arriba</button>
@@ -65,37 +83,41 @@
         </div>
         <div class="bk-row" id="bk-danger" style="display:none">
           <span class="bk-label">☠</span>
-          <button class="bk dng" onclick="ins('si_peligro(5):\n  huir()\nfin')">si peligro → huir</button>
-          <button class="bk dng" onclick="ins('si_peligro(5):\n  ir_a_refugio()\n  esconderse()\nfin')">peligro → refugio</button>
+          <button class="bk dng" onclick="ins('si_peligro_derecha(5):\n  izquierda(2)\nfin')">peligro →</button>
+          <button class="bk dng" onclick="ins('si_peligro_izquierda(5):\n  derecha(2)\nfin')">peligro ←</button>
+          <button class="bk dng" onclick="ins('si_peligro_arriba(5):\n  abajo(2)\nfin')">peligro ↑</button>
+          <button class="bk dng" onclick="ins('si_peligro_abajo(5):\n  arriba(2)\nfin')">peligro ↓</button>
         </div>
-        <div class="bk-row" id="bk-smart" style="display:none">
-          <span class="bk-label">🧠</span>
-          <button class="bk smt" onclick="ins('ir_a_especia()')">ir a ◆</button>
-          <button class="bk smt" onclick="ins('ir_a_refugio()')">ir a ⛰</button>
-          <button class="bk smt" onclick="ins('huir()')">huir ☠</button>
-          <button class="bk smt" onclick="ins('esconderse()')">🛡 esconder</button>
+        <div class="bk-row" id="bk-sense" style="display:none">
+          <span class="bk-label">👁</span>
+          <button class="bk sns" onclick="ins('si_especia(derecha,8):\n  derecha(2)\nfin')">◆ especia</button>
+          <button class="bk sns" onclick="ins('si_refugio(derecha,4):\n  derecha(2)\nfin')">⛰ refugio</button>
+          <button class="bk sns" onclick="ins('si_bloqueado(derecha):\n  abajo(1)\nfin')">▧ bloqueado</button>
+          <button class="bk sns" onclick="ins('esconderse()')">🛡 esconder</button>
           <button class="bk e" onclick="ins('sino:\n  ')">↪ sino</button>
         </div>
       </div>
 
       <div class="editor-body">
-        <div class="editor-toolbar"><span class="ed-title">// CÓDIGO</span><span class="ed-status" id="ed-status">LISTO</span><button class="tb-btn" onclick="clearEditor()">🗑</button></div>
+        <div class="editor-toolbar">
+          <span class="ed-title">// CÓDIGO</span>
+          <span class="ed-status" id="ed-status">LISTO</span>
+          <button class="tb-btn" onclick="clearEditor()">🗑</button>
+        </div>
         <textarea id="code" spellcheck="false" placeholder="// Escribe tu código aquí"></textarea>
         <div id="console"></div>
       </div>
 
       <div class="ed-actions">
-        <button class="ea run" onclick="runCode(false)">▶ Ejecutar</button>
-        <button class="ea cont" id="btn-cont" onclick="runCode(true)" style="display:none">▶+ Continuar</button>
+        <button class="ea run" onclick="runCode()">▶ Ejecutar</button>
         <button class="ea stop" onclick="stopCode()">■</button>
         <button class="ea rst" onclick="resetLevel()">↺</button>
         <button class="ea hint" onclick="showHint()">💡</button>
       </div>
 
       <div id="hint-box" class="hint-box">
-        <div class="hint-header"><span>💡 Pista <span id="hint-num"></span></span><button onclick="closeHint()">✕</button></div>
+        <div class="hint-header"><span>💡 Pista</span><button onclick="closeHint()">✕</button></div>
         <div class="hint-body" id="hint-text"></div>
-        <button class="hint-more" id="hint-more-btn" onclick="nextHint()">Más ayuda →</button>
       </div>
     </div>
   </div>
